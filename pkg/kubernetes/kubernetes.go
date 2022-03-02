@@ -19,19 +19,20 @@ package kubernetes
 import (
 	"context"
 	"fmt"
-	"github.com/mitchellh/mapstructure"
-	"github.com/tkeel-io/cli/fileutil"
-	"helm.sh/helm/v3/pkg/chart"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"path/filepath"
-	"sigs.k8s.io/yaml"
 	"strings"
+
+	"github.com/mitchellh/mapstructure"
+	"helm.sh/helm/v3/pkg/chart"
+	"sigs.k8s.io/yaml"
 
 	dapr "github.com/dapr/cli/pkg/kubernetes"
 	"github.com/dapr/cli/pkg/print"
 	"github.com/pkg/errors"
+	"github.com/tkeel-io/cli/fileutil"
 	helm "helm.sh/helm/v3/pkg/action"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -74,7 +75,7 @@ type InstallConfig struct {
 	Repo       map[string]interface{} `yaml:"repo"`
 }
 
-// middleware.yaml
+// middleware.yaml.
 type MiddlewareConfig struct {
 	Queue           string `json:"queue" yaml:"queue" mapstructure:"queue,omitempty"`
 	Database        string `json:"database" yaml:"database" mapstructure:"database,omitempty"`
@@ -89,18 +90,13 @@ func (c *MiddlewareConfig) Empty() bool {
 }
 
 type Repo struct {
-	Url  string
+	URL  string
 	Name string
 }
 
 // Init deploys the tKeel operator using the supplied runtime version.
-func Init(config InitConfiguration) (err error) {
-	//print.InfoStatusEvent(os.Stdout, "Checking the Dapr runtime status...")
-	//err = check(config)
-	//if err != nil {
-	//	return err
-	//}
-	tKeelHelmRepo = config.Repo.Url
+func Init(config InitConfiguration) (err error) { //nolint
+	tKeelHelmRepo = config.Repo.URL
 
 	helmConf, err = helmConfig(config.Namespace, getLog(config.DebugMode))
 	if err != nil {
@@ -113,17 +109,18 @@ func Init(config InitConfiguration) (err error) {
 	}
 
 	if config.ConfigFile[0] == '~' {
-		home, err := os.UserHomeDir()
+		var home string
+		home, err = os.UserHomeDir()
 		if err != nil {
 			return err
 		}
 		config.ConfigFile = strings.Replace(config.ConfigFile, "~", home, 1)
 	}
 
-	if _, err := os.Stat(config.ConfigFile); os.IsNotExist(err) {
+	if _, err = os.Stat(config.ConfigFile); os.IsNotExist(err) {
 		middlewares := make(map[string]interface{})
-		for _, config := range componentMiddleware {
-			for k, v := range config {
+		for _, value := range componentMiddleware {
+			for k, v := range value {
 				middlewares[k] = v
 			}
 		}
@@ -154,13 +151,12 @@ func Init(config InitConfiguration) (err error) {
 	}
 	for _, v := range middlewareMap {
 		items := strings.Split(v, ",")
-		res, err := url.Parse(items[0])
+		var res *url.URL
+		res, err = url.Parse(items[0])
 		if err != nil {
 			return err
 		}
-		if _, ok := dependencies[res.Scheme]; ok {
-			delete(dependencies, res.Scheme)
-		}
+		delete(dependencies, res.Scheme)
 	}
 	newDependency := make([]*chart.Chart, 0)
 	for _, v := range dependencies {
@@ -191,21 +187,24 @@ func Init(config InitConfiguration) (err error) {
 		return err
 	}
 
-	_, err = AdminLogin(config.Password)
+	err = afterInit(config)
 	if err != nil {
 		return err
 	}
 
-	err = AddRepo(config.Repo.Name, config.Repo.Url)
+	return nil
+}
+
+func afterInit(config InitConfiguration) error {
+	_, err := AdminLogin(config.Password)
 	if err != nil {
 		return err
 	}
 
-	// err = registerPlugins(config)
-	// if err != nil {
-	// 	return err
-	// }
-
+	err = AddRepo(config.Repo.Name, config.Repo.URL)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -246,11 +245,10 @@ func deploy(config InitConfiguration, middlewareChart *chart.Chart, keelChart *c
 // 	return err
 // }
 
-// load middleware config form file
+// load middleware config form file.
 func loadMiddlewareConfig(config string) (*MiddlewareConfig, error) {
 	middlewareConfig := &MiddlewareConfig{}
 	file, err := fileutil.LocateFile(fileutil.RewriteFlag(), config)
-	defer file.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -278,10 +276,10 @@ func initMiddlewareConfig(config string, middlewareConfig map[string]interface{}
 		newContent += "# " + line + "\n"
 	}
 	file, err := fileutil.LocateFile(fileutil.RewriteFlag(), config)
-	defer file.Close()
 	if err != nil {
 		return err
 	}
+	defer file.Close()
 	_, err = file.WriteString(newContent)
 	return err
 }

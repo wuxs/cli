@@ -3,8 +3,9 @@ package kubernetes
 import (
 	"encoding/json"
 	"fmt"
-	terrors "github.com/tkeel-io/kit/errors"
 	"net/http"
+
+	terrors "github.com/tkeel-io/kit/errors"
 
 	"github.com/pkg/errors"
 	"github.com/tkeel-io/kit/result"
@@ -24,7 +25,7 @@ type RepoListOutput struct {
 }
 
 type AddRepoRequest struct {
-	Url string `json:"url"`
+	URL string `json:"url"`
 }
 
 func ListRepo() ([]RepoListOutput, error) {
@@ -66,7 +67,7 @@ func AddRepo(name, url string) error {
 		return errors.Wrap(err, "get token error")
 	}
 	method := fmt.Sprintf(_addRepoMethodFormat, name)
-	req := AddRepoRequest{Url: url}
+	req := AddRepoRequest{URL: url}
 	data, err := json.Marshal(req)
 	if err != nil {
 		return errors.Wrap(err, "marshal add repo request failed")

@@ -62,8 +62,12 @@ func CoreApply(filenames []string) error {
 			continue
 		}
 		method := fmt.Sprintf("v1/entities/%s?source=%s&owner=%s&type=%s", coreStruct.ID, coreStruct.Source, coreStruct.Owner, coreStruct.Type)
-		data, _ := json.Marshal(coreStruct.Properties)
-		if resp, err := InvokeByPortForward(pluginCore, method, data, http.MethodPut); err != nil {
+		data, err := json.Marshal(coreStruct.Properties)
+		if err != nil {
+			return err
+		}
+		var resp string
+		if resp, err = InvokeByPortForward(pluginCore, method, data, http.MethodPut); err != nil {
 			fmt.Println(err)
 		} else {
 			fmt.Println(resp)
@@ -85,9 +89,12 @@ func CoreCreate(filenames []string) error {
 			method += fmt.Sprintf("&id=%s", coreStruct.ID)
 		}
 
-		data, _ := json.Marshal(coreStruct.Properties)
-
-		if resp, err := InvokeByPortForward(pluginCore, method, data, http.MethodPost); err != nil {
+		data, err := json.Marshal(coreStruct.Properties)
+		if err != nil {
+			return err
+		}
+		var resp string
+		if resp, err = InvokeByPortForward(pluginCore, method, data, http.MethodPost); err != nil {
 			fmt.Println(err)
 		} else {
 			fmt.Println(resp)
@@ -134,8 +141,12 @@ func CoreList(search, selector string) error {
 	searchRequest.Condition = selector2SearchConditions(selector)
 
 	method := "v1/entities/search"
-	data, _ := json.Marshal(searchRequest)
-	if resp, err := InvokeByPortForward(pluginCore, method, data, http.MethodPost); err != nil {
+	data, err := json.Marshal(searchRequest)
+	if err != nil {
+		return err
+	}
+	var resp string
+	if resp, err = InvokeByPortForward(pluginCore, method, data, http.MethodPost); err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println(resp)
@@ -145,8 +156,12 @@ func CoreList(search, selector string) error {
 
 func CoreWatch(entityID string) error {
 	method := "v1/ws"
-	data, _ := json.Marshal(map[string]string{"id": entityID})
-	if resp, err := WebsocketByPortForward("core-broker", method, data); err != nil {
+	data, err := json.Marshal(map[string]string{"id": entityID})
+	if err != nil {
+		return err
+	}
+	var resp string
+	if resp, err = WebsocketByPortForward("core-broker", method, data); err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println(resp)

@@ -29,6 +29,6 @@ var InstallerCmd = &cobra.Command{
 }
 
 func init() {
-	//InstallerCmd.Flags().BoolVarP(&kubernetesMode, "kubernetes", "k", true, "List tenant's enabled plugins in a Kubernetes cluster")
+	// InstallerCmd.Flags().BoolVarP(&kubernetesMode, "kubernetes", "k", true, "List tenant's enabled plugins in a Kubernetes cluster")
 	InstallerCmd.Flags().BoolP("help", "h", false, "Print this help message")
 }

@@ -18,11 +18,12 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/tkeel-io/cli/cmd/installer"
-	"github.com/tkeel-io/cli/pkg/kubernetes"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/tkeel-io/cli/cmd/installer"
+	"github.com/tkeel-io/cli/pkg/kubernetes"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

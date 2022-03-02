@@ -82,7 +82,8 @@ func InvokeByPortForward(pluginID, method string, data []byte, verb string, reqO
 		url := makeEndpoint(portForward.App, portForward, method)
 		// initialize port forwarding.
 		fmt.Println(url)
-		req, err := http.NewRequest(verb, url, bytes.NewBuffer(data))
+		var req *http.Request
+		req, err = http.NewRequest(verb, url, bytes.NewBuffer(data))
 		if err != nil {
 			return "", fmt.Errorf("error creat http request: %w", err)
 		}
@@ -95,13 +96,13 @@ func InvokeByPortForward(pluginID, method string, data []byte, verb string, reqO
 		}
 
 		var httpc http.Client
-
-		r, err := httpc.Do(req)
+		var res *http.Response
+		res, err = httpc.Do(req)
 		if err != nil {
 			return "", fmt.Errorf("error do http request: %w", err)
 		}
-		defer r.Body.Close()
-		return readResponse(r)
+		defer res.Body.Close()
+		return readResponse(res)
 	}
 
 	portForward.Stop()

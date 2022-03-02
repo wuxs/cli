@@ -82,8 +82,6 @@ export const cases = {
         "install",
         "https://tkeel-io.github.io/helm-charts/keel-echo@v0.2.0",
         "tkeel-echo",
-        "-n",
-        "testing",
       ],
     },
     `Install "keel-echo" success! It's named "tkeel-echo" in k8s`

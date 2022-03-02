@@ -10,10 +10,10 @@ import (
 
 const UserHelpExample = `
 # Manage plugins.
-tkeel user create <username> <password> -t <tenantId>
-tkeel user show <userId> -t <tenantId>
-tkeel user delete <userId> -t <tenantId>
-tkeel user list -t <tenantId>
+tkeel user create <username> <password> -t <tenantID>
+tkeel user show <userID> -t <tenantID>
+tkeel user delete <userID> -t <tenantID>
+tkeel user list -t <tenantID>
 `
 
 var UserCmd = &cobra.Command{
@@ -30,6 +30,6 @@ var UserCmd = &cobra.Command{
 }
 
 func init() {
-	//UserCmd.Flags().BoolVarP(&kubernetesMode, "kubernetes", "k", true, "List tenant's enabled plugins in a Kubernetes cluster")
+	// UserCmd.Flags().BoolVarP(&kubernetesMode, "kubernetes", "k", true, "List tenant's enabled plugins in a Kubernetes cluster")
 	UserCmd.Flags().BoolP("help", "h", false, "Print this help message")
 }

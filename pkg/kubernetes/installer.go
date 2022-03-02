@@ -2,12 +2,13 @@ package kubernetes
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/pkg/errors"
 	terrors "github.com/tkeel-io/kit/errors"
 	"github.com/tkeel-io/kit/result"
 	repoApi "github.com/tkeel-io/tkeel/api/repo/v1"
 	"google.golang.org/protobuf/encoding/protojson"
-	"net/http"
 )
 
 const (
@@ -59,12 +60,11 @@ func InstallerList(repo string) ([]InstallerListOutPut, error) {
 }
 
 func InstallerListAll() ([]InstallerListOutPut, error) {
-
 	token, err := getAdminToken()
 	if err != nil {
 		return nil, errors.Wrap(err, "error getting admin token")
 	}
-	method := fmt.Sprintf(_installerListAllFormat)
+	method := _installerListAllFormat
 
 	resp, err := InvokeByPortForward(_pluginKeel, method, nil, http.MethodGet, setAuthenticate(token))
 	if err != nil {

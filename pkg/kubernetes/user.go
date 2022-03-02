@@ -3,12 +3,13 @@ package kubernetes
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/pkg/errors"
 	terrors "github.com/tkeel-io/kit/errors"
 	"github.com/tkeel-io/kit/result"
 	tenantApi "github.com/tkeel-io/tkeel/api/tenant/v1"
 	"google.golang.org/protobuf/encoding/protojson"
-	"net/http"
 )
 
 const (
@@ -25,18 +26,18 @@ type UserListOutPut struct {
 }
 
 type UserInfo struct {
-	Username string `json:"username"` //nolint
-	Password string `json:"password"` //nolint
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
-func TenantUserCreate(tenantId, username, password string) error {
+func TenantUserCreate(tenantID, username, password string) error {
 	token, err := getAdminToken()
 	if err != nil {
 		return err
 	}
-	method := fmt.Sprintf(_createTenantUserMethodFormat, tenantId)
+	method := fmt.Sprintf(_createTenantUserMethodFormat, tenantID)
 	userinfo := UserInfo{Username: password, Password: password}
-	data, err := json.Marshal(userinfo) //nolint
+	data, err := json.Marshal(userinfo)
 	if err != nil {
 		return errors.Wrap(err, "marshal plugin request failed")
 	}
@@ -59,13 +60,13 @@ func TenantUserCreate(tenantId, username, password string) error {
 	return nil
 }
 
-// tenant user manage
-func TenantUserDelete(tenantId, userId string) error {
+// tenant user manage.
+func TenantUserDelete(tenantID, userID string) error {
 	token, err := getAdminToken()
 	if err != nil {
 		return err
 	}
-	method := fmt.Sprintf(_deleteTenantUserMethodFormat, tenantId, userId)
+	method := fmt.Sprintf(_deleteTenantUserMethodFormat, tenantID, userID)
 	resp, err := InvokeByPortForward(_pluginKeel, method, nil, http.MethodDelete, setAuthenticate(token))
 	if err != nil {
 		return errors.Wrap(err, "invoke "+method+" error")
@@ -84,12 +85,12 @@ func TenantUserDelete(tenantId, userId string) error {
 	return nil
 }
 
-func TenantUserInfo(tenantId, userId string) ([]UserListOutPut, error) {
+func TenantUserInfo(tenantID, userID string) ([]UserListOutPut, error) {
 	token, err := getAdminToken()
 	if err != nil {
 		return nil, errors.Wrap(err, "error getting admin token")
 	}
-	method := fmt.Sprintf(_infoTenantUserMethodFormat, tenantId, userId)
+	method := fmt.Sprintf(_infoTenantUserMethodFormat, tenantID, userID)
 
 	resp, err := InvokeByPortForward(_pluginKeel, method, nil, http.MethodGet, setAuthenticate(token))
 	if err != nil {
@@ -117,12 +118,12 @@ func TenantUserInfo(tenantId, userId string) ([]UserListOutPut, error) {
 	return list, nil
 }
 
-func TenantUserList(tenantId string) ([]UserListOutPut, error) {
+func TenantUserList(tenantID string) ([]UserListOutPut, error) {
 	token, err := getAdminToken()
 	if err != nil {
 		return nil, errors.Wrap(err, "error getting admin token")
 	}
-	method := fmt.Sprintf(_listTenantUserMethodFormat, tenantId)
+	method := fmt.Sprintf(_listTenantUserMethodFormat, tenantID)
 
 	resp, err := InvokeByPortForward(_pluginKeel, method, nil, http.MethodGet, setAuthenticate(token))
 	if err != nil {

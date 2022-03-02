@@ -12,8 +12,8 @@ import (
 var TenantHelpExample = `
 # Manage tenants.
 tkeel tenant create <tenantTitle>
-tkeel tenant show <tenantId>
-tkeel tenant delete <tenantId>
+tkeel tenant show <tenantID>
+tkeel tenant delete <tenantID>
 tkeel tenant list
 `
 var TenantCmd = &cobra.Command{

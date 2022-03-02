@@ -32,10 +32,9 @@ func Check() *DaprStatus {
 		result.Error = ErrDaprNotInstall
 		result.Installed = false
 		return result
-	} else {
-		result.Installed = true
-		result.Namespace = status[0].Namespace
 	}
+	result.Installed = true
+	result.Namespace = status[0].Namespace
 	client, err := dapr.Client()
 	if err != nil {
 		result.Error = err

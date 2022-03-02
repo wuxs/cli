@@ -36,7 +36,7 @@ var (
 	enableHA       bool
 	values         []string
 	configFile     string
-	repoUrl        string
+	repoURL        string
 	repoName       string
 	password       string
 )
@@ -66,7 +66,7 @@ tkeel init --wait --timeout 600
 			DebugMode:  debugMode,
 			Secret:     secret,
 			Repo: &kubernetes.Repo{
-				Url:  repoUrl,
+				URL:  repoURL,
 				Name: repoName,
 			},
 			Password:   password,
@@ -90,7 +90,7 @@ func init() {
 	InitCmd.Flags().UintVarP(&timeout, "timeout", "", 300, "The wait timeout for the Kubernetes installation")
 	InitCmd.Flags().BoolVarP(&debugMode, "debug", "", false, "The log mode")
 	InitCmd.Flags().StringVarP(&configFile, "middleware-config", "f", "~/.tkeel/middleware.yaml", "The tkeel middleware config file")
-	InitCmd.Flags().StringVarP(&repoUrl, "repo-url", "", "https://tkeel-io.github.io/helm-charts/", "The tkeel repo url")
+	InitCmd.Flags().StringVarP(&repoURL, "repo-url", "", "https://tkeel-io.github.io/helm-charts/", "The tkeel repo url")
 	InitCmd.Flags().StringVarP(&repoName, "repo-name", "", "tkeel", "The tkeel repo name")
 	InitCmd.Flags().StringVarP(&password, "password", "", "changeme", "The tkeel admin password")
 	InitCmd.Flags().BoolP("help", "h", false, "Print this help message")
