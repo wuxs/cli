@@ -31,7 +31,7 @@ jobs:
       GOPROXY: https://proxy.golang.org
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest, macOS-latest]
         go: [1.17]
         target_arch: [amd64]
         include:
