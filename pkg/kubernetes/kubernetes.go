@@ -134,12 +134,10 @@ func Init(config InitConfiguration) error {
 		for service, iuri := range middlewareConfig {
 			if value, exist := middleware[service]; exist {
 				middlewareConfig[service] = value.Url
-			} else {
-				if uri, ok := iuri.(string); ok {
-					middleware[service] = &kitconfig.Value{
-						Customized: false,
-						Url:        uri,
-					}
+			} else if uri, ok := iuri.(string); ok {
+				middleware[service] = &kitconfig.Value{
+					Customized: false,
+					Url:        uri,
 				}
 			}
 		}
@@ -444,12 +442,10 @@ func Upgrade(config InitConfiguration) error {
 		for service, iuri := range middlewareConfig {
 			if value, exist := middleware[service]; exist {
 				middlewareConfig[service] = value.Url
-			} else {
-				if uri, ok := iuri.(string); ok {
-					middleware[service] = &kitconfig.Value{
-						Customized: false,
-						Url:        uri,
-					}
+			} else if uri, ok := iuri.(string); ok {
+				middleware[service] = &kitconfig.Value{
+					Customized: false,
+					Url:        uri,
 				}
 			}
 		}
